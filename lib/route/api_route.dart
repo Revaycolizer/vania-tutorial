@@ -13,7 +13,7 @@ class ApiRoute implements Route {
     Router.basePrefix('api');
 
     Router.any("/greeting",(){
-      return "Hello World";
+      return Response.json({"message":"Hello World"});
     });
 
      Router.get("/home", homeController.index);
