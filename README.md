@@ -13,6 +13,12 @@ YouTube Video [Quick Start](https://www.youtube.com/watch?v=k8ol0F4bDKs)
 
 [![Quick Start](http://img.youtube.com/vi/k8ol0F4bDKs/0.jpg)](https://www.youtube.com/watch?v=k8ol0F4bDKs "Quick Start")
 
+
+## Rename .env.example file to .env
+```bash
+.env
+```
+
 ## make new project
 ```bash
 vania create project_name
