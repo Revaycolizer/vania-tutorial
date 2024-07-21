@@ -9,6 +9,7 @@ class CreateProductTable extends Migration {
       id();
       timeStamps();
       text('name');
+      integer('userId');
       date('createdAt');
       integer('price');
     });

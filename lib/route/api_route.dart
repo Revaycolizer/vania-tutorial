@@ -14,6 +14,8 @@ class ApiRoute implements Route {
 
     Router.get("/home", homeController.index);
 
+      Router.post("/register", homeController.create).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
+
     Router.get("/hello-world", () {
       return Response.html('Hello World');
     }).middleware([HomeMiddleware()]);
