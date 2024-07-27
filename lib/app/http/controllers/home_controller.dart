@@ -126,6 +126,7 @@ final token = jwt.sign(SecretKey(pem));
       );
     return Response.json(user);
 
+
   }
 
   Future<Response> show(String id) async {
@@ -144,6 +145,7 @@ final userLogin = {
   }
 
   Future<Response> edit(int id) async {
+    
     
     return Response.json({});
   }

@@ -16,8 +16,22 @@ class ApiRoute implements Route {
       return Response.json({"message":"Hello World"});
     });
 
+    Router.any("/greeting",(){
+      return Response.json({"message":"Hello World"});
+    });
+
+     Router.get("/home", homeController.index);
      Router.get("/home", homeController.index);
 
+      Router.post("/register", homeController.store).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
+
+      Router.post("/login", homeController.create).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
+
+       Router.get("/user/{id}", homeController.show).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
+
+       Router.patch("/user/{id}", homeController.update).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
+
+           Router.delete("/user/{id}", homeController.destroy).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
       Router.post("/register", homeController.store).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
 
       Router.post("/login", homeController.create).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
