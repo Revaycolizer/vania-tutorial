@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:todo/database/migrations/create_personal_access_tokens_table.dart';
 import 'package:vania/vania.dart';
 import 'create_user_table.dart';
 import 'create_product_table.dart';
@@ -15,8 +16,9 @@ void main(List<String> args) async {
 }
 
 class Migrate {
-  registry() async {
-		 await CreateUserTable().up();
+  registry() async{
+		await CreatePersonalAccessTokensTable().up();
+		await CreateUserTable().up();
 		 await CreateProductTable().up();
 	}
 

@@ -1,5 +1,8 @@
 
 
+import 'dart:io';
+
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vania/vania.dart';
 
@@ -17,9 +20,29 @@ bool verifyPassword(String password, String hashedPassword) {
   return hashPassword(password) == hashedPassword;
 }
 
+
+
 class HomeController extends Controller {
-  Future<Response> index() async {
-    return Response.json({'message':"Hello World"});
+  Future<Response> index(Request request) async {
+
+   final token = request.header('Authorization');
+
+   if(token==null){
+    return Response.json({"message":"Unauthorized"},400);
+   }
+   
+ final pem = File('private_key.pem').readAsStringSync();
+
+final jwt = JWT.verify(token, SecretKey(pem));
+
+ final user = await User().query().where('id','=',jwt.payload['id']).first();
+
+ if(user==null){
+  return Response.json({"message":"User does not exist"},400);
+ }
+
+ return Response.json(user);
+
   }
 
   Future<Response> create(Request request) async {
@@ -39,18 +62,30 @@ class HomeController extends Controller {
 
      final user = await User().query().where('name','=',name).first();
 
-     final isMatch = verifyPassword(password, user!['password']);
-
-     if(!isMatch){
-      return Response.json({"message":"Incorrect credentials"});
+      if(user==null){
+      return Response.json({"message":"User does not exist"},400);
      }
 
-     final userLogin = {
-      'id':user['id'],
-      'name':user['name'],
-     };
+     final isMatch = verifyPassword(password, user['password']);
 
-    return Response.json(userLogin);
+     if(!isMatch){
+      return Response.json({"message":"Incorrect credentials"},400);
+     }
+     
+final userLogin = {
+     'id': user['id'],
+     'name': user['name'],
+};
+
+ final jwt = JWT({
+    'id': user['id']
+ });
+
+  final pem = File('private_key.pem').readAsStringSync();
+
+final token = jwt.sign(SecretKey(pem));
+
+    return Response.json(token);
    
   }
 
@@ -59,7 +94,7 @@ class HomeController extends Controller {
     final password = request.input('password');
 
     if(!request.has('name') || !request.has('password')){
-      return Response.json({"message":"Missing fields"});
+      return Response.json({"message":"Missing fields"},400);
     }
  
     request.validate({
@@ -76,7 +111,7 @@ class HomeController extends Controller {
     final isAvailable = await User().query().where('name','=',name).first();
    
     if(isAvailable != null){
-      return Response.json({'message':"User with that name exists"});
+      return Response.json({'message':"User with that name exists"},400);
     }
     final id = Uuid().v4();
    
@@ -98,7 +133,7 @@ class HomeController extends Controller {
      final user = await User().query().where('id','=',id).first();
    
     if(user==null){
-      return Response.json({'message':"User does not exists"});
+      return Response.json({'message':"User does not exists"},400);
     }
 final userLogin = {
       'id':user['id'],
@@ -117,7 +152,7 @@ final userLogin = {
        final name = request.input('name');
 
     if(!request.has('name')){
-      return Response.json({"message":"Missing fields"});
+      return Response.json({"message":"Missing fields"},400);
     }
  
     request.validate({
@@ -140,7 +175,7 @@ final userLogin = {
      final user = await User().query().where('id','=',id).first();
    
     if(user==null){
-      return Response.json({'message':"User does not exists"});
+      return Response.json({'message':"User does not exists"},400);
     }
 
 User().query().where('id','=',id).delete();

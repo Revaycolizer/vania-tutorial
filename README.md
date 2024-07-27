@@ -19,6 +19,11 @@ YouTube Video [Quick Start](https://www.youtube.com/watch?v=k8ol0F4bDKs)
 .env
 ```
 
+For user token storage
+```bash
+vania make:auth
+```
+
 ## make new project
 ```bash
 vania create project_name
@@ -48,4 +53,36 @@ vania migrate
 ## run serve
 ```bash
 vania serve
+```
+
+## Generate a Private Key
+
+Open a Git bash and run:
+```bash
+
+openssl genpkey -algorithm RSA -out private_key.pem -aes256 -pass pass:yourpassword
+
+```
+This command generates a private key and saves it to private_key.pem. You will be prompted to set a passphrase to protect the key.
+
+## Extract the Public Key
+
+Extract the public key from the private key:
+
+```bash
+openssl rsa -pubout -in private_key.pem -out public_key.pem -passin pass:yourpassword
+
+```
+
+## View or Use Keys
+
+You can view your private key with:
+
+```bash
+cat private_key.pem
+```
+And the public key with:
+
+```bash
+cat public_key.pem
 ```
