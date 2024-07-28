@@ -6,11 +6,11 @@ class CreateProductTable extends Migration {
   Future<void> up() async{
    super.up();
    await createTableNotExists('product', () {
-      id();
-      timeStamps();
+      uuid('id');
       text('name');
-      integer('userId');
       date('createdAt');
+      date('updatedAt');
+      uuid('userId');
       integer('price');
     });
   }

@@ -46,8 +46,15 @@ class ApiRoute implements Route {
       return Response.html('Hello World');
     }).middleware([HomeMiddleware()]);
 
+Router.post("/create-product", productController.store).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
 
-   Router.get("/products", productController.index);
+Router.get("/product/{id}", productController.show).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
+
+Router.patch("/product/{id}", productController.update).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
+
+ Router.delete("/product/{id}", productController.destroy).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
+
+   Router.get("/products", productController.index).middleware([Throttle(maxAttempts: 3,duration:Duration(seconds: 60))]);
     // Return error code 400
     Router.get('wrong-request',
             () => Response.json({'message': 'Hi wrong request'}))
